@@ -73,7 +73,7 @@ const Movie = (props) => {
         dispatch(fetchMovie(params.movieId))
         dispatch(fetchMovieReleaseDate(params.movieId))
         dispatch(fetchSimilarMovies(params.movieId))
-    }, [params.movieId])
+    }, [params.movieId, dispatch])
 
     const handleFavorites = () => {
         dispatch(handleFavoriteFilm({ backdrop_path, original_title, overview, id }))
