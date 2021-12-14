@@ -58,7 +58,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <div className="App" className={body}>
+        <div className={body}>
           <div className={backgroundImage}>
             <div className={backgroundSheet}></div>
           </div>
