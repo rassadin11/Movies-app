@@ -1,0 +1,31 @@
+input::placeholder {
+    color: #fff
+}
+
+.movies {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  margin-left: -30px; /* gutter size offset */
+  width: auto;
+  margin-top: 10px;
+}
+
+.movies-grid {
+  padding-left: 30px; /* gutter size */
+  background-clip: padding-box;
+}
+
+@media (max-width: 520px) {
+  .movies-grid {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+/* Style your items */
+.movies-grid > div { /* change div to reference your elements you put in <Masonry> */
+  background: transparent;
+  margin-bottom: 30px;
+}
