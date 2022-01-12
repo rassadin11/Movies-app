@@ -5,7 +5,6 @@ import { fetchMovies } from "../redux/reducers/thunks/thunks"
 import { makeStyles } from '@mui/styles'
 import { searchMovie } from '../redux/reducers/thunks/thunks'
 import Masonry from "react-masonry-css"
-import FormHelperText from '@mui/material/FormHelperText';
 import BookCard from './Card'
 import { fetchTopRatedMovies } from '../redux/reducers/thunks/thunks';
 import { useLocation, useNavigate } from "react-router-dom"
@@ -54,7 +53,7 @@ const Catalog = (props) => {
     } else if (query) {
       return dispatch(searchMovie(query))
     } else dispatch(fetchMovies())
-  }, [dispatch])
+  }, [dispatch, location.search, query])
 
   const handleChange = (event) => {
     setCategory(event.target.value)

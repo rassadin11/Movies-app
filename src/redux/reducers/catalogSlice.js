@@ -24,7 +24,8 @@ export const catalogSlice = createSlice({
       })
 
       if (filmId === -1) {
-        localStorage.setItem("favorites", JSON.stringify(Array(...favorites, action.payload)))
+        let array = [...favorites, action.payload]
+        localStorage.setItem("favorites", JSON.stringify(array))
       } else {
         favorites.splice(filmId, 1)
         localStorage.setItem("favorites", JSON.stringify(favorites))
