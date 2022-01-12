@@ -1,20 +1,23 @@
 import React from "react"
 import Masonry from "react-masonry-css";
-import { useSelector } from 'react-redux'
 import BookCard from "./Card";
-import '../App.css'
 import { makeStyles } from "@mui/styles";
+import '../App.css'
 
 const useStyles = makeStyles({
     main: {
-        padding: "10px 20px 0",
+        padding: "84px 20px 0",
         textAlign: '0 auto'
+    },
+    empty: {
+        color: '#fff',
+        margin: 0
     }
 })
 
 const FavoriteMovies = (props) => {
-    const favorites = useSelector(state => state.catalog.favorites)
-    const { main } = useStyles()
+    const { main, empty } = useStyles()
+    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
 
     const breakpoints = {
         default: 6,
@@ -26,7 +29,7 @@ const FavoriteMovies = (props) => {
     return (
         <div className={main}>
             <Masonry breakpointCols={breakpoints} className="movies" columnClassName="movies-grid">
-                {favorites && favorites.map(favorite => <div key={favorite.id}><BookCard {...favorite} tab /></div>)}
+                {favorites.length ? favorites.map(favorite => <div key={favorite.id}><BookCard {...favorite} tab custom /></div>) : <h1 className={empty}>No favourite movies</h1>}
             </Masonry>
         </div>
     )

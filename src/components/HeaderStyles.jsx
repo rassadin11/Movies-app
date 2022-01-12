@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 export const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#c3c3c3',
+    backgroundColor: '#343434',
     transition: "all .3s ease",
     '&:hover': {
         backgroundColor: alpha('#b9b9b9', 0.25),
@@ -24,11 +24,10 @@ export const SearchIconWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
-    paddingLeft: theme.spacing(1.5)
+    paddingLeft: theme.spacing(1.5),
 }));
 
 export const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: '#000',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 2, 1, 0),
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
@@ -37,6 +36,12 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
         '&:focus': {
             width: '20ch',
         },
+        '&::placeholder': {
+            color: '#fff',
+        },
+        '&:hover &::placeholder': {
+            color: '#fff'
+        },
     }
 }));
 
@@ -44,7 +49,7 @@ export const useStyles = makeStyles({
     toolbar: {
         display: "flex",
         justifyContent: "space-between",
-        background: "#909090"
+        background: "#343434",
     },
     link: {
         textDecoration: 'none',
@@ -61,13 +66,13 @@ export const useStyles = makeStyles({
     },
     navbarDrawer: {
         width: '250px',
-        background: "#909090",
+        background: "#343434",
         height: '100%',
         padding: '5px 0',
         boxSizing: 'border-box',
         fontSize: "22px",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
     },
     navbarItem: {
         padding: '5px 10px',

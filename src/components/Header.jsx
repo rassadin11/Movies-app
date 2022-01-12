@@ -6,34 +6,35 @@ import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import { Search, SearchIconWrapper, StyledInputBase, useStyles } from './HeaderStyles'
-import { useDispatch } from "react-redux";
-import { fetchMovies, searchMovie } from "../redux/reducers/catalogSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMovies, searchMovie } from "../redux/reducers/thunks/thunks";
+import { setQuery } from "../redux/reducers/catalogSlice";
 
 const Header = (props) => {
     const params = useLocation()
     const dispatch = useDispatch()
 
     const { toolbar, searchBar, leftSide, navbarDrawer, navbarItem, active, link } = useStyles(props)
+    let { query } = useSelector(state => state.catalog)
+
     const [drawer, setDrawer] = React.useState(false)
-    const [input, setInput] = React.useState('')
 
     const navbarElements = [
         {
-            id: 1,
-            title: "My favorite movies",
-            path: '/favorites',
+            id: 2,
+            title: "Movies",
+            path: '/'
         },
         {
-            id: 2,
-            title: "Films",
-            path: '/'
-        }
+            id: 1,
+            title: "Favorite movies",
+            path: '/favorites',
+        },
     ]
 
     const handleInputClick = () => {
-        if (input !== '') {
-            setInput('')
-            dispatch(searchMovie(input))
+        if (query !== '') {
+            dispatch(searchMovie(query))
         } else {
             dispatch(fetchMovies())
         }
@@ -44,13 +45,24 @@ const Header = (props) => {
     }
 
     const handleClick = (e) => {
+        dispatch(setQuery(e.target.value))
+    }
+
+    const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             handleInputClick()
         }
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{
+            flexGrow: 1,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: '100vw',
+            zIndex: 10
+        }}>
             <AppBar position="static" elevation={0}>
                 <Toolbar className={toolbar}>
                     <div className={leftSide}>
@@ -71,16 +83,16 @@ const Header = (props) => {
                         </Link>
                     </div>
                     {params.pathname === '/' && <Search className={searchBar}>
-                        <SearchIconWrapper onClick={handleInputClick} >
+                        <SearchIconWrapper >
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
                             sx={{ color: "#fff" }}
                             placeholder="Search movies"
                             inputProps={{ 'aria-label': 'search movies' }}
-                            value={input}
-                            onChange={e => setInput(e.target.value)}
-                            onKeyPress={handleClick}
+                            onChange={handleClick}
+                            onKeyPress={handleKeyPress}
+                            value={query}
                         />
                     </Search>}
                 </Toolbar>

@@ -1,28 +1,12 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-//  search by movie
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchMovies, fetchTopRatedMovies, searchMovie } from './thunks/thunks';
 
 const initialState = {
   films: [],
-  favorites: [],
+  query: '',
   isLoaded: false,
   error: null
 };
-
-export const fetchMovies = createAsyncThunk('movies/fetchMovies', () => {
-  return axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=12bfc5eec58fbcff2e8dd007290d305b&language=en-US&page=1`)
-    .then(response => {
-      return response.data
-    })
-})
-
-export const searchMovie = createAsyncThunk('queryMovies/searchMovie', (query) => {
-  return axios.get(`https://api.themoviedb.org/3/search/movie?api_key=12bfc5eec58fbcff2e8dd007290d305b&language=en-US&query=${query}&page=1&include_adult=true`)
-    .then(response => {
-      return response.data
-    })
-})
 
 export const catalogSlice = createSlice({
   name: 'movies',
@@ -30,23 +14,28 @@ export const catalogSlice = createSlice({
   reducers: {
     handleFavoriteFilm(state, action) {
       let filmId = -1
+      let favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
 
-      state.favorites.forEach(film => {
+      favorites.forEach(film => {
         if (film.id === action.payload.id) {
-          filmId = state.favorites.findIndex(film => film.id === action.payload.id)
+          filmId = favorites.findIndex(film => film.id === action.payload.id)
           return
         }
       })
 
       if (filmId === -1) {
-        state.favorites.push(action.payload)
+        localStorage.setItem("favorites", JSON.stringify(Array(...favorites, action.payload)))
       } else {
-        state.favorites.splice(filmId, 1)
+        favorites.splice(filmId, 1)
+        localStorage.setItem("favorites", JSON.stringify(favorites))
       }
+    },
+    setQuery(state, action) {
+      state.query = action.payload
     }
   },
   extraReducers: {
-    [fetchMovies.pending]: (state, action) => {
+    [fetchMovies.pending]: (state) => {
       state.isLoaded = true
       state.error = null
     },
@@ -56,7 +45,7 @@ export const catalogSlice = createSlice({
     },
     [fetchMovies.rejected]: (state, action) => {
       state.isLoaded = false
-      state.error = 'error'
+      state.error = action.payload
     },
     [searchMovie.pending]: (state) => {
       state.isLoaded = true
@@ -66,13 +55,25 @@ export const catalogSlice = createSlice({
       state.isLoaded = false
       state.films = action.payload
     },
-    [searchMovie.rejected]: (state) => {
+    [searchMovie.rejected]: (state, action) => {
       state.isLoaded = false
-      state.error = 'error'
+      state.error = action.payload
     },
+    [fetchTopRatedMovies.pending]: (state) => {
+      state.isLoaded = true
+      state.error = null
+    },
+    [fetchTopRatedMovies.fulfilled]: (state, action) => {
+      state.isLoaded = false
+      state.films = action.payload
+    },
+    [fetchTopRatedMovies.rejected]: (state, action) => {
+      state.isLoaded = false
+      state.error = action.payload
+    }
   },
 });
 
-export const { handleFavoriteFilm } = catalogSlice.actions;
+export const { handleFavoriteFilm, setQuery } = catalogSlice.actions;
 
 export default catalogSlice.reducer;

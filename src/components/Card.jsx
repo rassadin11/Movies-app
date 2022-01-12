@@ -23,7 +23,7 @@ export default function BookCard({ backdrop_path, original_title, overview, id, 
     const [isFavorite, setisFavorite] = React.useState(tab)
     const { link } = useStyles()
 
-    const handlefavorites = () => {
+    const handleFavorite = () => {
         if (custom) {
             setisFavorite(!isFavorite)
             dispatch(handleFavoriteFilm({ backdrop_path, original_title, overview, id }))
@@ -34,13 +34,16 @@ export default function BookCard({ backdrop_path, original_title, overview, id, 
 
     return (
         <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-                component="img"
-                height="140"
-                image={backdrop_path ? `https://image.tmdb.org/t/p/w500${backdrop_path}` : basic}
-                alt="no photo on server =(, it isn't my mistake"
-            />
-            <CardContent>
+            <Link className={link} to={`/movies/${id}`}>
+                <CardMedia
+                    component="img"
+                    height="140"
+                    sx={{ overflow: 'hidden', transition: 'all .3s ease', '&:hover': { transform: 'scale(1.2)' } }}
+                    image={backdrop_path ? `https://image.tmdb.org/t/p/w500${backdrop_path}` : basic}
+                    alt="no photo on server =(, it isn't my mistake"
+                />
+            </Link>
+            <CardContent sx={{ background: "#fff", zIndex: 5, position: "relative" }}>
                 <Typography gutterBottom variant="h5" component="div">
                     {original_title}
                 </Typography>
@@ -49,7 +52,7 @@ export default function BookCard({ backdrop_path, original_title, overview, id, 
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" onClick={handlefavorites}>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</Button>
+                <Button size="small" onClick={handleFavorite}>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</Button>
                 <Link className={link} to={`/movies/${id}`}><Button size="small">Learn More</Button></Link>
             </CardActions>
         </Card>

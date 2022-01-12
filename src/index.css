@@ -14,12 +14,18 @@ code {
 
 /* полоса прокрутки (скроллбар) */
 body::-webkit-scrollbar {
-  width: 16px; /* ширина для вертикального скролла */
-  height: 6px; /* высота для горизонтального скролла */
+  width: 16px;
+  /* ширина для вертикального скролла */
+  height: 6px;
+  /* высота для горизонтального скролла */
   background-color: #8a8a8a;
 }
 
 /* ползунок скроллбара */
 body::-webkit-scrollbar-thumb {
   background-color: #bdb1aa;
+}
+
+#demo-simple-select-helper, #demo-simple-select-helper-label {
+  color: #fff
 }

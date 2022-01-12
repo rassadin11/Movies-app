@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchMovie, fetchMovieReleaseDate, fetchSimilarMovies } from "./thunks/thunks";
 
 const initialState = {
     film: [],
@@ -7,27 +7,6 @@ const initialState = {
     isLoading: false,
     error: null
 }
-
-export const fetchMovie = createAsyncThunk('movieSearch/fetchMovie', (id) => {
-    return axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=12bfc5eec58fbcff2e8dd007290d305b&language=en-US`)
-        .then(response => {
-            return response.data
-        })
-})
-
-export const fetchMovieReleaseDate = createAsyncThunk('movieSearch/fetchMovieReleaseDate', (id) => {
-    return axios.get(`https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=12bfc5eec58fbcff2e8dd007290d305b`)
-        .then(response => {
-            return response.data
-        })
-})
-
-export const fetchSimilarMovies = createAsyncThunk('movieSearch/fetchSimilarMovies', (id) => {
-    return axios.get(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=12bfc5eec58fbcff2e8dd007290d305b&language=en-US&page=1`)
-        .then(response => {
-            return response.data
-        })
-})
 
 export const movieSlice = createSlice({
     name: "movieSearch",

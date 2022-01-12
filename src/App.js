@@ -21,6 +21,7 @@ const useStyles = makeStyles({
     backgroundImage: `url(${bg})`,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
+    backgroundPosition: 'center',
     left: "-2%",
     top: "-2%",
     filter: 'blur(3px)',
@@ -64,7 +65,7 @@ function App() {
           </div>
           <Header />
           <Routes>
-            <Route exact path="/" element={<Catalog />} />
+            <Route path="/" element={<Catalog />} />
             <Route exact path="/favorites" element={<FavoriteMovies />} />
             <Route exact path="/movies/:movieId" element={<Movie />} />
           </Routes>

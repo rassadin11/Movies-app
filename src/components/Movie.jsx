@@ -1,7 +1,6 @@
 import React from "react"
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchMovie, fetchMovieReleaseDate, fetchSimilarMovies } from "../redux/reducers/movieSlice";
 import { CardMedia, Container, Typography, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import MovieDetails from "./MovieDetails";
@@ -11,10 +10,13 @@ import { handleFavoriteFilm } from "../redux/reducers/catalogSlice";
 import { getDate, getMonth, parseISO } from "date-fns";
 import Grid from '@mui/material/Grid';
 import basic from './img/basic.png'
+import { fetchMovie, fetchMovieReleaseDate, fetchSimilarMovies } from "../redux/reducers/thunks/thunks";
+import { nanoid } from "@reduxjs/toolkit";
 
 const useStyles = makeStyles({
     grid: {
         marginTop: 20,
+        paddingTop: 74
     },
     link: {
         textDecoration: 'none',
@@ -64,7 +66,7 @@ const Movie = (props) => {
     const params = useParams()
     const dispatch = useDispatch()
     const { film, similarMovies, isLoading } = useSelector(state => state.movie)
-    const { favorites } = useSelector(state => state.catalog)
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
     const { grid, link, details, flex, image, similarMoviesText, containerPadding } = useStyles()
     const { backdrop_path, original_title, overview, id } = film
     const isFavourite = favorites.findIndex(movie => movie.id === film.id)
@@ -79,11 +81,10 @@ const Movie = (props) => {
         dispatch(handleFavoriteFilm({ backdrop_path, original_title, overview, id }))
     }
 
-    const computeDate = (timestamp) => {
-        console.log(parseISO(film.results[0].release_dates[0].release_date), getDate(parseISO(film.results[0].release_dates[0].release_date)))
+    const computeDate = () => {
         let days = getDate(parseISO(film.results[0].release_dates[0].release_date)) // get days
         let month = getMonth(parseISO(film.results[0].release_dates[0].release_date)) + 1 // get month
-        const year = getYear(parseISO(film.results[0].release_dates[0].release_date)) // get year
+        let year = getYear(parseISO(film.results[0].release_dates[0].release_date)) // get year
 
         if (days < 10) days = `0${days}`
         if (month < 10) month = `0${month}`
@@ -170,7 +171,7 @@ const Movie = (props) => {
             <Grid container spacing={2}>
                 {similarMovies.results ? similarMovies.results.map(movie => {
                     return (
-                        <Grid item lg={4} xs={12} small={6}>
+                        <Grid item lg={4} xs={12} small={6} key={nanoid()}>
                             <div className={image}>
                                 <a href={`/movies/${movie.id}`}><img src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}` : basic} alt="" className={image} /></a>
                                 <div className={similarMoviesText}>{movie.title}</div>
