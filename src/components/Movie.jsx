@@ -82,7 +82,7 @@ const Movie = (props) => {
 
         if (filmId === -1) setFavorite(false)
         else setFavorite(true)
-    }, [dispatch, id])
+    }, [dispatch, favorites, id])
 
     React.useMemo(() => {
         dispatch(fetchMovie(params.movieId))
