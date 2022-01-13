@@ -70,7 +70,7 @@ const Movie = (props) => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
     let [favorite, setFavorite] = React.useState(null)
 
-    let isFavorite = () => {
+    React.useEffect(() => {
         let filmId = -1
 
         favorites.forEach(film => {
@@ -82,11 +82,7 @@ const Movie = (props) => {
 
         if (filmId === -1) setFavorite(false)
         else setFavorite(true)
-    }
-
-    React.useEffect(() => {
-        isFavorite()
-    }, [dispatch, id, isFavorite])
+    }, [dispatch, id])
 
     React.useMemo(() => {
         dispatch(fetchMovie(params.movieId))
