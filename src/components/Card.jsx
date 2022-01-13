@@ -47,8 +47,8 @@ export default function BookCard({ backdrop_path, original_title, overview, id, 
                 <Typography gutterBottom variant="h5" component="div">
                     {original_title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {overview}
+                <Typography component={'span'} variant="body2" color="text.secondary">
+                    {overview.length <= 200 ? <p>{overview}</p> : overview[199] === ' ' ? <p>{overview.slice(0, 199)}...</p> : <p>{overview.slice(0, 200)}...</p>}
                 </Typography>
             </CardContent>
             <CardActions>

@@ -6,7 +6,6 @@ import { makeStyles } from "@mui/styles";
 import MovieDetails from "./MovieDetails";
 import getYear from "date-fns/fp/getYear";
 import Button from '@mui/material/Button';
-import { handleFavoriteFilm } from "../redux/reducers/catalogSlice";
 import { getDate, getMonth, parseISO } from "date-fns";
 import Grid from '@mui/material/Grid';
 import basic from './img/basic.png'
@@ -63,13 +62,31 @@ const useStyles = makeStyles({
 })
 
 const Movie = (props) => {
-    const params = useParams()
     const dispatch = useDispatch()
+    const params = useParams()
     const { film, similarMovies, isLoading } = useSelector(state => state.movie)
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
-    const { grid, link, details, flex, image, similarMoviesText, containerPadding } = useStyles()
     const { backdrop_path, original_title, overview, id } = film
-    const isFavourite = favorites.findIndex(movie => movie.id === film.id)
+    const { grid, link, details, flex, image, similarMoviesText, containerPadding } = useStyles()
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
+    let [favorite, setFavorite] = React.useState(null)
+
+    let isFavorite = () => {
+        let filmId = -1
+
+        favorites.forEach(film => {
+            if (film.id === id) {
+                filmId = favorites.findIndex(film => film.id === id)
+                return
+            }
+        })
+
+        if (filmId === -1) setFavorite(false)
+        else setFavorite(true)
+    }
+
+    React.useEffect(() => {
+        isFavorite()
+    }, [dispatch, id, isFavorite])
 
     React.useMemo(() => {
         dispatch(fetchMovie(params.movieId))
@@ -77,8 +94,25 @@ const Movie = (props) => {
         dispatch(fetchSimilarMovies(params.movieId))
     }, [params.movieId, dispatch])
 
-    const handleFavorites = () => {
-        dispatch(handleFavoriteFilm({ backdrop_path, original_title, overview, id }))
+    function handleFavorites() {
+        let filmId = -1
+
+        favorites.forEach(film => {
+            if (film.id === id) {
+                filmId = favorites.findIndex(film => film.id === id)
+                return
+            }
+        })
+
+        if (filmId === -1) {
+            let array = [...favorites, { backdrop_path, original_title, overview, id }]
+            localStorage.setItem("favorites", JSON.stringify(array))
+            setFavorite(true)
+        } else {
+            favorites.splice(filmId, 1)
+            localStorage.setItem("favorites", JSON.stringify(favorites))
+            setFavorite(false)
+        }
     }
 
     const computeDate = () => {
@@ -141,7 +175,7 @@ const Movie = (props) => {
                                 background: "#c3c3c3",
                                 border: '1px solid #c3c3c3',
                             }
-                        }} onClick={handleFavorites}>{isFavourite > -1 ? 'Remove from favorites' : 'Add to favorites'}</Button>
+                        }} onClick={handleFavorites}>{favorite ? 'Remove from favorites' : 'Add to favorites'}</Button>
                         <a className={link} href={film.homepage}>WATCH</a>
                     </div>
                     {

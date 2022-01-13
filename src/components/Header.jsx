@@ -73,7 +73,11 @@ const Header = (props) => {
                             edge="start"
                             color="inherit"
                             aria-label="menu"
-                            sx={{ mr: 2 }}
+                            sx={{
+                                mr: 2, '@media (max-width: 400px)': {
+                                    mr: 0
+                                }
+                            }}
                             onClick={changeDrawer}
                         >
                             <MenuIcon />

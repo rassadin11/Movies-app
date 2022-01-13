@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     },
     empty: {
         color: '#fff',
-        margin: 0
+        margin: 0,
     }
 })
 
@@ -28,9 +28,13 @@ const FavoriteMovies = (props) => {
 
     return (
         <div className={main}>
-            <Masonry breakpointCols={breakpoints} className="movies" columnClassName="movies-grid">
-                {favorites.length ? favorites.map(favorite => <div key={favorite.id}><BookCard {...favorite} tab custom /></div>) : <h1 className={empty}>No favourite movies</h1>}
-            </Masonry>
+            {favorites.length ?
+                <Masonry breakpointCols={breakpoints} className="movies" columnClassName="movies-grid">
+                    {favorites.length && favorites.map(favorite => {
+                        return (<div key={favorite.id}><BookCard {...favorite} tab custom /></div>)
+                    })}
+                </Masonry>
+                : <h1 className={empty}>You haven't got favourite movies</h1>}
         </div>
     )
 };

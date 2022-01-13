@@ -58,6 +58,18 @@ export const useStyles = makeStyles({
 
         '&:hover': {
             color: '#f0f0f0'
+        },
+
+        '@media (max-width: 400px)': {
+            '& > *': {
+                fontSize: '1.1rem!important'
+            }
+        },
+
+        '@media (max-width: 350px)': {
+            '& > *': {
+                fontSize: '0.9rem!important'
+            }
         }
     },
     leftSide: {

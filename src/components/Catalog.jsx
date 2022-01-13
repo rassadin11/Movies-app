@@ -36,8 +36,9 @@ const Catalog = (props) => {
   let navigate = useNavigate()
   let location = useLocation()
   const { main, headerBar } = useStyles()
-  let [category, setCategory] = React.useState('')
+  let [category, setCategory] = React.useState(0)
   let favoriteFilms = JSON.parse(localStorage.getItem('favorites') || '[]')
+  let enums = ['Top movies', 'Upcoming movies', 'Top rated movies']
 
   const breakpoints = {
     default: 6,
@@ -67,8 +68,7 @@ const Catalog = (props) => {
     <div className={main}>
       <div className={headerBar}>
         <div>
-          <Typography variant="h4" element="h4" color="#fff">Different movies</Typography>
-          <Typography element="p" color="#fff">* powered by The Movie DB API</Typography>
+          <Typography variant="h4" element="h4" color="#fff">{location.search.indexOf("?search_query=") === -1 ? enums[category] : 'Result of search'}</Typography>
         </div>
 
         <FormControl sx={{ m: 1, minWidth: 120 }}>
