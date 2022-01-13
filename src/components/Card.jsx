@@ -60,7 +60,7 @@ export default function BookCard({ backdrop_path, original_title, overview, id, 
 }
 
 BookCard.propTypes = {
-    backdrop_path: PropTypes.string.isRequired,
+    backdrop_path: PropTypes.string,
     original_title: PropTypes.string.isRequired,
     overview: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,

@@ -2,21 +2,20 @@ import { AppBar, Box, Drawer, Toolbar, Typography } from "@mui/material"
 import React from "react"
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import { Search, SearchIconWrapper, StyledInputBase, useStyles } from './HeaderStyles'
-import { useDispatch, useSelector } from "react-redux";
-import { fetchMovies, searchMovie } from "../redux/reducers/thunks/thunks";
-import { setQuery } from "../redux/reducers/catalogSlice";
+import { useDispatch } from "react-redux";
+import { fetchMovie, searchMovie } from "../redux/reducers/thunks/thunks";
 
 const Header = (props) => {
-    const params = useLocation()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const location = useLocation()
 
     const { toolbar, searchBar, leftSide, navbarDrawer, navbarItem, active, link } = useStyles(props)
-    let { query } = useSelector(state => state.catalog)
-
+    let [query, setQuery] = React.useState('')
     const [drawer, setDrawer] = React.useState(false)
 
     const navbarElements = [
@@ -32,25 +31,28 @@ const Header = (props) => {
         },
     ]
 
-    const handleInputClick = () => {
-        if (query !== '') {
-            dispatch(searchMovie(query))
-        } else {
-            dispatch(fetchMovies())
+    React.useEffect(() => {
+        if (location.search.indexOf("?search_query=") > -1) {
+            dispatch(searchMovie(location.search.slice(14, location.search.length)))
         }
-    }
+    }, [dispatch, location.search])
 
     const changeDrawer = () => {
         setDrawer(!drawer)
     }
 
     const handleClick = (e) => {
-        dispatch(setQuery(e.target.value))
+        setQuery(e.target.value)
     }
 
     const handleKeyPress = (e) => {
-        if (e.key === "Enter") {
-            handleInputClick()
+        setQuery(e.target.value)
+
+        if (e.key === "Enter" && query !== '') {
+            dispatch(searchMovie(query))
+            navigate(`/?search_query=${query}`)
+        } else if (e.key === 'Enter' && query === '') {
+            dispatch(fetchMovie())
         }
     }
 
@@ -82,7 +84,7 @@ const Header = (props) => {
                             </Typography>
                         </Link>
                     </div>
-                    {params.pathname === '/' && <Search className={searchBar}>
+                    {location.pathname === '/' && <Search className={searchBar}>
                         <SearchIconWrapper >
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -104,7 +106,7 @@ const Header = (props) => {
                 onClick={changeDrawer}
             >
                 <div className={navbarDrawer}>
-                    {navbarElements.map(item => <Link to={`${item.path}`} className={item.path === params.pathname ? `${navbarItem} ${active}` : `${navbarItem}`} key={item.id}>{item.title}</Link>)}
+                    {navbarElements.map(item => <Link to={`${item.path}`} className={item.path === location.pathname ? `${navbarItem} ${active}` : `${navbarItem}`} key={item.id}>{item.title}</Link>)}
                 </div>
             </Drawer>
         </Box >

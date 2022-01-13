@@ -156,7 +156,7 @@ const Movie = (props) => {
                             <MovieDetails title="Average rate" text={film.vote_average} />
                             <MovieDetails title="Amount of votes" text={film.vote_count} />
                             <MovieDetails title="Adult" text={film.adult ? '18+' : 'no'} />
-                            {film.spoken_languages ? <MovieDetails title="Original language" text={film.spoken_languages[0].english_name} border={false} /> : ''}
+                            {film.spoken_languages && <MovieDetails title="Original language" text={film.spoken_languages[0] && film.spoken_languages[0].english_name} border={false} />}
                         </div> : ''
                     }
                 </Grid>

@@ -31,13 +31,13 @@ const useStyles = makeStyles({
 
 const Catalog = (props) => {
   const dispatch = useDispatch()
-  const { query } = useSelector(state => state.catalog)
   const films = useSelector((state) => state.catalog.films)
-  const { main, headerBar } = useStyles()
+  const { query } = useSelector(state => state.catalog)
   let navigate = useNavigate()
   let location = useLocation()
-  let favoriteFilms = JSON.parse(localStorage.getItem('favorites') || '[]')
+  const { main, headerBar } = useStyles()
   let [category, setCategory] = React.useState('')
+  let favoriteFilms = JSON.parse(localStorage.getItem('favorites') || '[]')
 
   const breakpoints = {
     default: 6,
@@ -52,6 +52,8 @@ const Catalog = (props) => {
       return dispatch(fetchTopRatedMovies(+location.search[location.search.length - 1]))
     } else if (query) {
       return dispatch(searchMovie(query))
+    } else if (location.search.indexOf("?search_query=") > -1) {
+      return
     } else dispatch(fetchMovies())
   }, [dispatch, location.search, query])
 
